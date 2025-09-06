@@ -162,7 +162,6 @@ h2{
   transition: 0.3s;
 }
 
-
 .contact-info svg,
 .contact-info p {
     color: #fff;
@@ -417,37 +416,6 @@ h6 {
   font-family: var(--heading-font);
 }
 
-/* PHP Email Form Messages
-------------------------------*/
-
-.php-email-form .sent-message {
-  display: none;
-  color: #ffffff;
-  background: #059652;
-  text-align: center;
-  padding: 15px;
-  margin-bottom: 24px;
-  font-weight: 600;
-}
-
-.php-email-form .loading {
-  display: none;
-  background: var(--surface-color);
-  text-align: center;
-  padding: 15px;
-  margin-bottom: 24px;
-}
-
-@keyframes php-email-form-loading {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 /*--------------------------------------------------------------
 # Global Header
 --------------------------------------------------------------*/
@@ -499,10 +467,80 @@ h6 {
   background: color-mix(in srgb, var(--accent-color), transparent 15%);
 }
 
+
+/* ==== DESKTOP HEADER LAYOUT (DEFAULT) ==== */
+.header .contact-info {
+  order: 0;
+}
+
+.header .logo {
+  order: 1;
+}
+
+.header .navmenu {
+  order: 2;
+}
+
+.header .lang-buttons {
+  order: 3;
+}
+
+.header .admin-login {
+  order: 4;
+}
+
+.header .btn-getstarted {
+  order: 5;
+}
+
+/* DESKTOP vs MOBILE visibility */
+.header-desktop-only {
+  display: flex;
+}
+
+.mobile-nav-extras {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .header-desktop-only {
+    display: none !important;
+  }
+
+  .mobile-nav-extras {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-nav-extras .contact-info-mobile p,
+  .mobile-nav-extras .lang-buttons button,
+  .mobile-nav-extras .btn-getstarted {
+    color: white;
+    text-align: left;
+  }
+
+  .mobile-nav-extras button {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    margin-right: 0.5rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .mobile-nav-extras a.btn-getstarted {
+    margin-top: 1rem;
+    display: inline-block;
+  }
+}
+
+/* ORIGINAL @MEDIA
 @media (max-width: 1200px) {
   .header .logo {
     order: 1;
   }
+
+
 
   .header .btn-getstarted {
     order: 2;
@@ -513,7 +551,7 @@ h6 {
   .header .navmenu {
     order: 3;
   }
-}
+} */
 
 .scrolled .header {
   box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.1);
