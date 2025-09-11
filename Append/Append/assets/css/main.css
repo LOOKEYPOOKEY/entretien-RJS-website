@@ -15,12 +15,13 @@
 .lang-buttons button {
   background-color: #eee;
   border: none;
-  padding: 1px 4px;
-  margin-right: 6px;
+  padding: 0px 2px;
+  margin-right: 4px;
   cursor: pointer;
   border-radius: 4px;
   font-weight: 600;
   color: #333;
+  font-size: 13px;
   transition: background-color 0.3s;
 }
 
@@ -422,7 +423,7 @@ h6 {
 .header {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 20px 0;
+  padding: 8px 0;
   transition: all 0.5s;
   z-index: 997;
 }
@@ -432,7 +433,7 @@ h6 {
 }
 
 .header .logo img {
-  max-height: 36px;
+  max-height: 28px;
   margin-right: 8px;
 }
 
@@ -503,34 +504,82 @@ h6 {
 }
 
 @media (max-width: 767px) {
-  .header-desktop-only {
+  .header .lang-buttons,
+  .header .lang-buttons button {
+    pointer-events: auto !important;
+    z-index: 1002;
+    position: relative;
+  }
+  .logo-wrapper {
+    pointer-events: none;
+  }
+  .logo-wrapper .logo {
+    pointer-events: auto;
+  }
+  .header .lang-buttons {
+    margin-right: 0px;
+    margin-top: 10px;
+    justify-content: flex-end !important;
+  }
+  .header {
+    min-height: 70px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto !important;
+  }
+  .logo img {
+    max-height: 52px !important;
+    height: auto;
+  }
+  .logo-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    pointer-events: none;
+  }
+  .logo-wrapper .logo {
+    pointer-events: auto;
+  }
+  .header .container-fluid {
+    position: relative;
+  }
+  .mobile-nav-toggle {
+    order: -1;
+    margin-right: 10px;
+    margin-left: 0;
+    position: static;
+    left: 0;
+    top: 0;
+    z-index: 1001;
+    font-size: 2rem;
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    box-shadow: none;
+    display: flex !important;
+    align-items: center;
+  }
+
+  /* Hide contact info, admin icon, and estimation button on mobile; keep only language buttons */
+  .header .contact-info,
+  .header .admin-login,
+  .header .btn-getstarted {
     display: none !important;
   }
-
-  .mobile-nav-extras {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mobile-nav-extras .contact-info-mobile p,
-  .mobile-nav-extras .lang-buttons button,
-  .mobile-nav-extras .btn-getstarted {
-    color: white;
-    text-align: left;
-  }
-
-  .mobile-nav-extras button {
-    background: transparent;
-    border: 1px solid white;
-    color: white;
-    margin-right: 0.5rem;
-    padding: 4px 10px;
-    border-radius: 4px;
-  }
-
-  .mobile-nav-extras a.btn-getstarted {
-    margin-top: 1rem;
-    display: inline-block;
+  .header .lang-buttons {
+    display: flex !important;
   }
 }
 
@@ -893,7 +942,24 @@ h6 {
 
 .footer .footer-links ul a {
   display: inline-block;
-  line-height: 1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  pointer-events: none;
+}
+.logo-wrapper .logo {
+  pointer-events: auto;
+}
+
+.header .container-fluid {
+  position: relative;
+}
 }
 
 .footer .footer-contact p {
