@@ -504,6 +504,9 @@ h6 {
 }
 
 @media (max-width: 767px) {
+  .service {
+    flex-direction: column !important;
+  }
   .header .lang-buttons,
   .header .lang-buttons button {
     pointer-events: auto !important;
