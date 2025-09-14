@@ -387,6 +387,132 @@ font-weight: bold;
   scroll-behavior: smooth;
 }
 
+/* VEHICLE ESTIMATOR FORM CSS */
+.truck-cleaning h1,
+.truck-cleaning h2 {
+  font-family: var(--heading-font);
+  color: var(--heading-color);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.truck-cleaning form {
+  background: var(--surface-color);
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.truck-cleaning fieldset {
+  border: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.truck-cleaning legend {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+}
+
+.truck-cleaning label {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 500;
+  font-family: var(--default-font);
+  color: var(--default-color);
+}
+
+.truck-cleaning input[type="text"],
+.truck-cleaning input[type="email"],
+.truck-cleaning input[type="number"],
+.truck-cleaning select,
+.truck-cleaning textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  font-family: var(--default-font);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+  background-color: var(--background-color);
+  color: var(--default-color);
+  transition: border-color 0.3s ease;
+}
+
+.truck-cleaning input:focus,
+.truck-cleaning select:focus,
+.truck-cleaning textarea:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.truck-cleaning textarea {
+  resize: vertical;
+}
+
+.truck-cleaning input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 8px;
+  accent-color: var(--accent-color);
+}
+
+.truck-cleaning fieldset label {
+  display: inline-block;
+  width: 48%;
+  margin-bottom: 10px;
+  vertical-align: top;
+}
+
+.truck-cleaning #price-result {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--accent-color);
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-family: var(--heading-font);
+}
+
+.truck-cleaning button {
+  background-color: var(--accent-color);
+  color: var(--contrast-color);
+  border: none;
+  padding: 14px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: var(--heading-font);
+}
+
+.truck-cleaning button:hover {
+  background-color: #004c35;
+}
+
+.truck-cleaning button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 600px) {
+  .truck-cleaning form {
+    padding: 20px;
+  }
+
+  .truck-cleaning fieldset label {
+    width: 100%;
+  }
+
+  .truck-cleaning button {
+    width: 100%;
+  }
+}
+
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
 --------------------------------------------------------------*/
