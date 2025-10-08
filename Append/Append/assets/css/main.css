@@ -1,3 +1,14 @@
+/* Make vehicle quantity select dropdowns smaller */
+.vehicle-qty-select {
+  width: 120px;
+  min-width: 100px;
+  max-width: 140px;
+  padding: 6px 16px;
+  font-size: 16px;
+  height: 40px;
+  margin-left: 6px;
+  box-sizing: border-box;
+}
 
 /*--------------------------------------------------------------
 # Font & Color Variables
@@ -234,32 +245,6 @@ h2{
   border: none;
   cursor: pointer;
   border-radius: 5px;
-}
-
-.footer h4 {
-  color: #f9f9f9;
-}
-
-.footer .footer-links ul a {
-  color: color-mix(in srgb, #f9f9f9, transparent 20%);
-}
-
-.footer .footer-links ul a:hover {
-  color: #f9f9f9;
-}
-.footer .social-links a:hover {
-  color: #f9f9f9;
-  border-color: #f9f9f9;
-}
-
-.footer .social-links a {
-  border: 1px solid color-mix(in srgb, #f9f9f9, transparent 50%);
-  color: color-mix(in srgb, #f9f9f9, transparent 50%);
-}
-
-.footer {
-  color:#f9f9f9;
-  background-color:#005f41;
 }
 
 .copyright {
@@ -990,13 +975,21 @@ h6 {
   }
 }
 
-/*--------------------------------------------------------------
-# Global Footer
---------------------------------------------------------------*/
+/* ===== FOOTER STYLING ===== */
 .footer {
   font-size: 14px;
   padding-bottom: 50px;
   position: relative;
+  color: #f9f9f9;
+  background-color: #005f41;
+}
+
+.footer h4 {
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  padding-bottom: 12px;
+  color: #f9f9f9;
 }
 
 .footer .footer-top {
@@ -1004,12 +997,17 @@ h6 {
 }
 
 .footer .footer-about .logo {
-  margin-bottom: 25px;
+  display: block;
+  text-align: left;
+  margin-left: 0 !important;
 }
 
 .footer .footer-about .logo img {
+  display: block;
   max-height: 40px;
-  margin-right: 6px;
+  margin-left: 0 !important;
+  margin-right: auto;
+  margin-bottom: 20px;
 }
 
 .footer .footer-about .logo span {
@@ -1024,6 +1022,12 @@ h6 {
   font-family: var(--heading-font);
 }
 
+/* Social links */
+.footer .social-links {
+  display: flex;
+  margin-top: 10px;
+}
+
 .footer .social-links a {
   display: flex;
   align-items: center;
@@ -1034,15 +1038,16 @@ h6 {
   font-size: 16px;
   margin-right: 10px;
   transition: 0.3s;
+  border: 1px solid color-mix(in srgb, #f9f9f9, transparent 50%);
+  color: color-mix(in srgb, #f9f9f9, transparent 50%);
 }
 
-.footer h4 {
-  font-size: 16px;
-  font-weight: bold;
-  position: relative;
-  padding-bottom: 12px;
+.footer .social-links a:hover {
+  color: #f9f9f9;
+  border-color: #f9f9f9;
 }
 
+/* Footer links section */
 .footer .footer-links {
   margin-bottom: 30px;
 }
@@ -1053,16 +1058,8 @@ h6 {
   margin: 0;
 }
 
-.footer .footer-links ul i {
-  padding-right: 2px;
-  font-size: 12px;
-  line-height: 0;
-}
-
 .footer .footer-links ul li {
-  padding: 10px 0;
-  display: flex;
-  align-items: center;
+  padding: 8px 0;
 }
 
 .footer .footer-links ul li:first-child {
@@ -1070,33 +1067,25 @@ h6 {
 }
 
 .footer .footer-links ul a {
-  display: inline-block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  pointer-events: none;
-}
-.logo-wrapper .logo {
-  pointer-events: auto;
+  color: color-mix(in srgb, #f9f9f9, transparent 20%);
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.header .container-fluid {
-  position: relative;
+.footer .footer-links ul a:hover {
+  color: #f9f9f9;
 }
 
+/* Contact section (optional if you want extra spacing) */
 .footer .footer-contact p {
   margin-bottom: 5px;
 }
 
+/* Copyright */
 .footer .copyright {
   padding-top: 25px;
   padding-bottom: 25px;
+  text-align: center;
 }
 
 .footer .copyright p {
@@ -1107,6 +1096,7 @@ h6 {
   margin-top: 6px;
   font-size: 13px;
 }
+
 
 /*--------------------------------------------------------------
 # Preloader

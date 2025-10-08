@@ -218,8 +218,9 @@ function calculateEstimate() {
 
   vehicleCheckboxes.forEach(v => {
     const type = v.value;
-    const qtyInput = document.querySelector(`input[name="${type}-qty"]`);
-    const qty = parseInt(qtyInput.value) || 0;
+    // Support both input and select for qty fields
+    let qtyElem = document.querySelector(`input[name="${type}-qty"]`) || document.querySelector(`select[name="${type}-qty"]`);
+    const qty = qtyElem ? parseInt(qtyElem.value) || 0 : 0;
     if (qty > 0) {
       selectedVehicles.push(`${type} x${qty}`);
 
