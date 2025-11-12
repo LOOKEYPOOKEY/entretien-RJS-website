@@ -1,11 +1,3 @@
-/**
-* Template Name: Append
-* Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
-* Updated: Aug 07 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-
 (function() {
   "use strict";
 
@@ -114,16 +106,6 @@
    */
   new PureCounter();
 
-
-  /**
-   * Frequently Asked Questions Toggle
-   */
-  document.querySelectorAll('.faq-item h3, .faq-item .faq-toggle').forEach((faqItem) => {
-    faqItem.addEventListener('click', () => {
-      faqItem.parentNode.classList.toggle('faq-active');
-    });
-  });
-
   /**
    * Init swiper sliders
    */
@@ -185,127 +167,162 @@
 
 })();
 
-// VEHICLE CLEANING ESTIMATION FORM
-const basePrices = {
-  sedan: { interior: 50, exterior: 40 },
-  suv: { interior: 60, exterior: 50 },
-  pickup: { interior: 70, exterior: 60 },
-  van: { interior: 75, exterior: 65 },
-  semi: { interior: 90, exterior: 85 },
-  box: { interior: 100, exterior: 90 }
+// === VEHICLE CLEANING ESTIMATION SCRIPT ===
+
+// --- PRICE TABLE (from Elif’s new list) ---
+const priceTable = {
+  bronze: {
+    small: { "1-2": 75, "3-5": 65, "6-10": 60, "11-20": 55 },
+    medium: { "1-2": 80, "3-5": 70, "6-10": 65, "11-20": 60 },
+    large: { "1-2": 85, "3-5": 75, "6-10": 70, "11-20": 65 },
+    "xl-notipper": { "1-2": 100, "3-5": 90, "6-10": 85, "11-20": 80 },
+    "xl-tipper": { "1-2": 115, "3-5": 100, "6-10": 95, "11-20": 90 },
+    box: { "1-2": 95, "3-5": 85, "6-10": 80, "11-20": 75 }
+  },
+  silver: {
+    small: { "1-2": 90, "3-5": 80, "6-10": 75, "11-20": 70 },
+    medium: { "1-2": 100, "3-5": 90, "6-10": 85, "11-20": 80 },
+    large: { "1-2": 110, "3-5": 100, "6-10": 95, "11-20": 90 },
+    "xl-notipper": { "1-2": 125, "3-5": 115, "6-10": 110, "11-20": 105 },
+    "xl-tipper": { "1-2": 140, "3-5": 125, "6-10": 120, "11-20": 115 },
+    box: { "1-2": 130, "3-5": 115, "6-10": 110, "11-20": 105 }
+  }
 };
 
+// --- FREQUENCY DISCOUNT MULTIPLIERS ---
 const frequencyMultiplier = {
   oneTime: 1,
-  weekly: 0.9,
-  biweekly: 0.925,
-  monthly: 0.95
+  weekly: 1,
+  biweekly: 1,
+  monthly: 1
 };
 
-// --- Calculate estimate ---
-function calculateEstimate() {
-  const vehicleCheckboxes = document.querySelectorAll('input[name="vehicle"]:checked');
-  const service = document.getElementById('service-type').value;
-  const freq = document.getElementById('frequency').value;
+// --- HELPER FUNCTION: DETERMINE GROUP BASED ON QUANTITY ---
+function getQuantityGroup(qty) {
+  if (qty >= 1 && qty <= 2) return "1-2";
+  if (qty >= 3 && qty <= 5) return "3-5";
+  if (qty >= 6 && qty <= 10) return "6-10";
+  if (qty >= 11 && qty <= 20) return "11-20";
+  return null;
+}
 
-  if (!vehicleCheckboxes.length || !service || !freq) {
-    alert("Please select at least one vehicle and all options.");
+// === MAIN CALCULATION FUNCTION ===
+function calculateEstimate() {
+  const serviceType = document.getElementById("service-type").value; // bronze/silver
+  const frequency = document.getElementById("frequency").value;
+  const vehicleCheckboxes = document.querySelectorAll('input[name="vehicle"]:checked');
+  const resultDiv = document.getElementById("price-result");
+
+  if (!vehicleCheckboxes.length) {
+    alert("Please select at least one vehicle type.");
     return;
   }
 
   let total = 0;
-  let selectedVehicles = [];
+  let summary = [];
+  let vehicles = [];
+  let quantities = [];
 
-  vehicleCheckboxes.forEach(v => {
-    const type = v.value;
-    // Support both input and select for qty fields
-    let qtyElem = document.querySelector(`input[name="${type}-qty"]`) || document.querySelector(`select[name="${type}-qty"]`);
-    const qty = qtyElem ? parseInt(qtyElem.value) || 0 : 0;
+  vehicleCheckboxes.forEach(vehicle => {
+    const type = vehicle.value;
+    console.log(`Processing vehicle type: ${type}`);
+    const qtyInput = document.querySelector(`select[name="${type}-qty"]`);
+    if (!qtyInput) {
+      console.error(`Quantity input not found for vehicle type: ${type}`);
+      console.log('Available inputs:', document.querySelectorAll('input'));
+      return;
+    }
+    const qty = parseInt(qtyInput.value) || 0;
+
     if (qty > 0) {
-      selectedVehicles.push(`${type} x${qty}`);
+      const qtyGroup = getQuantityGroup(qty);
+      if (!qtyGroup) return;
 
-      let price = 0;
-      if (service === "interior") price += basePrices[type].interior;
-      else if (service === "exterior") price += basePrices[type].exterior;
-      else if (service === "both") price += basePrices[type].interior + basePrices[type].exterior;
+      const pricePerVehicle = priceTable[serviceType][type][qtyGroup];
+      const subtotal = pricePerVehicle * qty;
 
-      total += price * qty;
+      total += subtotal;
+      vehicles.push(type);
+      quantities.push(qty);
+      summary.push(`${type} x${qty} (${pricePerVehicle}$/ea)`);
     }
   });
 
-  total *= frequencyMultiplier[freq];
+  total *= frequencyMultiplier[frequency];
   total = Math.round(total * 100) / 100;
 
-  const resultText = `Estimated Price: $${total.toFixed(2)}`;
-  document.getElementById('price-result').innerText = resultText;
-
-  // Store summary in hidden field for EmailJS
-  document.getElementById('price-result').dataset.summary = `
-Vehicles: ${selectedVehicles.join(", ")}
-Service: ${service}
-Frequency: ${freq}
-Estimated Price: $${total.toFixed(2)}
+  resultDiv.innerText = `Total: $${total.toFixed(2)}`;
+  resultDiv.dataset.summary = `
+Service: ${serviceType.toUpperCase()}
+Frequency: ${frequency}
+Vehicles: ${summary.join(", ")}
+Total: $${total.toFixed(2)}
   `.trim();
 }
 
-// --- Button listener for calculation ---
-document.getElementById('calculate-btn').addEventListener('click', calculateEstimate);
+// === BUTTON LISTENER FOR CALCULATION ===
+document.getElementById("calculate-btn").addEventListener("click", calculateEstimate);
 
-// --- EmailJS form submission ---
-document.getElementById('truck-form').addEventListener('submit', function(e) {
+// === EMAILJS FORM SUBMISSION ===
+document.getElementById("truck-form").addEventListener("submit", function(e) {
   e.preventDefault();
 
+  const serviceType = document.getElementById("service-type").value;
+  const frequency = document.getElementById("frequency").value;
   const vehicleCheckboxes = document.querySelectorAll('input[name="vehicle"]:checked');
-  const service = document.getElementById('service-type').value;
-  const freq = document.getElementById('frequency').value;
 
+  let totalPrice = 0;
   let vehicles = [];
   let quantities = [];
-  let totalPrice = 0;
+  let summary = [];
 
-  vehicleCheckboxes.forEach(v => {
-    const type = v.value;
-    const qtyInput = document.querySelector(`input[name="${type}-qty"]`);
+  vehicleCheckboxes.forEach(vehicle => {
+    const type = vehicle.value;
+    const qtyInput = document.querySelector(`select[name="${type}-qty"]`);
     const qty = parseInt(qtyInput.value) || 0;
+
     if (qty > 0) {
+      const qtyGroup = getQuantityGroup(qty);
+      const pricePerVehicle = priceTable[serviceType][type][qtyGroup];
+      const subtotal = pricePerVehicle * qty;
+      totalPrice += subtotal;
+
       vehicles.push(type);
       quantities.push(qty);
-
-      let price = 0;
-      if (service === "interior") price += basePrices[type].interior;
-      else if (service === "exterior") price += basePrices[type].exterior;
-      else if (service === "both") price += basePrices[type].interior + basePrices[type].exterior;
-
-      totalPrice += price * qty;
+      summary.push(`${type} x${qty} (${pricePerVehicle}$/ea)`);
     }
   });
 
-  totalPrice *= frequencyMultiplier[freq];
+  totalPrice *= frequencyMultiplier[frequency];
   totalPrice = Math.round(totalPrice * 100) / 100;
 
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const message = document.getElementById('message').value.trim();
+  // === CONTACT INFO ===
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const message = document.getElementById("message").value.trim();
 
-  // Send individual variables to EmailJS
+  // === EMAILJS SEND ===
   emailjs.send("entretien-rjs", "template_f6rvobd", {
     name: name,
     email: email,
     phone: phone,
     message: message,
     vehicles: vehicles.join(", "),
-    service: service,
-    frequency: freq,
-    quantity: quantities.join(", "),
-    price: `$${totalPrice.toFixed(2)}`
-  }).then(function(response) {
-    alert("Your request has been sent successfully! We'll contact you shortly.");
-    document.getElementById('truck-form').reset();
-    document.getElementById('price-result').innerText = '';
-  }, function(error) {
-    console.error("FAILED...", error);
-    console.log(error.text);
-    alert("There was an error sending your request.");
-  });
+    service: serviceType.toUpperCase(),
+    frequency: frequency,
+    quantities: quantities.join(", "),
+    summary: summary.join(", "),
+    total_price: `$${totalPrice.toFixed(2)}`
+  }).then(
+    function(response) {
+      alert("Your request has been sent successfully! We'll contact you shortly.");
+      document.getElementById("truck-form").reset();
+      document.getElementById("price-result").innerText = '';
+    },
+    function(error) {
+      console.error("FAILED...", error);
+      alert("There was an error sending your request. Please try again.");
+    }
+  );
 });

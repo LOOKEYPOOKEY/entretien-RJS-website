@@ -2,11 +2,11 @@
 // so users can only select a value from 0 to 60 (no typing)
 document.addEventListener('DOMContentLoaded', function() {
   const qtyFields = [
-    'sedan-qty',
-    'suv-qty',
-    'pickup-qty',
-    'van-qty',
-    'semi-qty',
+    'small-qty',
+    'medium-qty',
+    'large-qty',
+    'xl-notipper-qty',
+    'xl-tipper-qty',
     'box-qty'
   ];
 
