@@ -1,9 +1,7 @@
 (function() {
   "use strict";
 
-  /**
-   * Apply .scrolled class to the body as the page is scrolled down
-   */
+  /* Apply .scrolled class to the body as the page is scrolled down */
   function toggleScrolled() {
     const selectBody = document.querySelector('body');
     const selectHeader = document.querySelector('#header');
@@ -14,9 +12,7 @@
   document.addEventListener('scroll', toggleScrolled);
   window.addEventListener('load', toggleScrolled);
 
-  /**
-   * Mobile nav toggle
-   */
+  /* Mobile nav toggle */
   const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
 
   function mobileNavToogle() {
@@ -26,21 +22,16 @@
   }
   mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
 
-  /**
-   * Hide mobile nav on same-page/hash links
-   */
+  /* Hide mobile nav on same-page/hash links */
   document.querySelectorAll('#navmenu a').forEach(navmenu => {
     navmenu.addEventListener('click', () => {
       if (document.querySelector('.mobile-nav-active')) {
         mobileNavToogle();
       }
     });
-
   });
 
-  /**
-   * Toggle mobile nav dropdowns
-   */
+  /* Toggle mobile nav dropdowns */
   document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
     navmenu.addEventListener('click', function(e) {
       e.preventDefault();
@@ -50,9 +41,7 @@
     });
   });
 
-  /**
-   * Preloader
-   */
+  /* Preloader */
   const preloader = document.querySelector('#preloader');
   if (preloader) {
     window.addEventListener('load', () => {
@@ -60,9 +49,7 @@
     });
   }
 
-  /**
-   * Scroll top button
-   */
+  /* Scroll top button */
   let scrollTop = document.querySelector('.scroll-top');
 
   function toggleScrollTop() {
@@ -81,9 +68,7 @@
   window.addEventListener('load', toggleScrollTop);
   document.addEventListener('scroll', toggleScrollTop);
 
-  /**
-   * Animation on scroll function and init
-   */
+  /* Animation on scroll function and init */
   function aosInit() {
     AOS.init({
       duration: 600,
@@ -94,21 +79,15 @@
   }
   window.addEventListener('load', aosInit);
 
-  /**
-   * Initiate glightbox
-   */
+  /* Initiate glightbox */
   const glightbox = GLightbox({
     selector: '.glightbox'
   });
 
-  /**
-   * Initiate Pure Counter
-   */
+  /* Initiate Pure Counter */
   new PureCounter();
 
-  /**
-   * Init swiper sliders
-   */
+  /* Init swiper sliders */
   function initSwiper() {
     document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
       let config = JSON.parse(
@@ -125,9 +104,7 @@
 
   window.addEventListener("load", initSwiper);
 
-  /**
-   * Correct scrolling position upon page load for URLs containing hash links.
-   */
+  /* Correct scrolling position upon page load for URLs containing hash links. */
   window.addEventListener('load', function(e) {
     if (window.location.hash) {
       if (document.querySelector(window.location.hash)) {
@@ -143,7 +120,7 @@
     }
   });
 
-  /* Navmenu Scrollspy */
+  // Navmenu Scrollspy
   let navmenulinks = document.querySelectorAll('.navmenu a');
 
   function navmenuScrollspy() {
@@ -162,15 +139,11 @@
   }
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
-
 })();
-
 
 // === VEHICLE CLEANING ESTIMATION SCRIPT ===
 
 // === COLLAPSIBLE INFO BOX ===
-
-// Opens/closes the info content
 function toggleInfoBox(lang) {
   if (lang === 'en') {
     document.getElementById('infoContentEn').classList.toggle('open');
@@ -179,31 +152,31 @@ function toggleInfoBox(lang) {
   }
 }
 
-// Shows the correct info box based on selected language
 function showInfoForLang(lang) {
   const enBox = document.getElementById("info-en");
   const frBox = document.getElementById("info-fr");
   const enContent = document.getElementById("infoContentEn");
   const frContent = document.getElementById("infoContentFr");
 
+// If any of the required elements do not exist on this page, stop here
+  if (!enBox || !frBox || !enContent || !frContent) {
+    return;
+  }
+
   if (lang === "fr") {
     enBox.style.display = "none";
     frBox.style.display = "block";
-
-    // Always close both boxes when switching languages
-    enContent.classList.remove("open");
-    frContent.classList.remove("open");
   } else {
     enBox.style.display = "block";
     frBox.style.display = "none";
-
-    enContent.classList.remove("open");
-    frContent.classList.remove("open");
   }
+
+// Always close boxes when switching languages
+  enContent.classList.remove("open");
+  frContent.classList.remove("open");
 }
 
 // === MAIN LANGUAGE SWITCH SYSTEM ===
-
 function setLanguage(lang) {
   // Store selected language (optional)
   localStorage.setItem("site-lang", lang);
@@ -211,18 +184,15 @@ function setLanguage(lang) {
   // Update HTML lang attribute (good for SEO)
   document.documentElement.setAttribute("lang", lang);
 
-  // IMPORTANT: This is the line that makes the collapsible switch 🚨
+  // IMPORTANT: This is the line that makes the collapsible switch
   showInfoForLang(lang);
-
 }
 
 // === AUTO-DETECT LANGUAGE ON PAGE LOAD ===
-
 document.addEventListener("DOMContentLoaded", () => {
   const savedLang = localStorage.getItem("site-lang") || "en";
   setLanguage(savedLang);
 });
-
 
 // --- PRICE TABLE ---
 const priceTable = {
@@ -325,37 +295,43 @@ Total: $${total.toFixed(2)}
 }
 
 // === BUTTON LISTENER FOR CALCULATION ===
-document.getElementById("calculate-btn").addEventListener("click", calculateEstimate);
+const calculateBtn = document.getElementById("calculate-btn");
+if (calculateBtn) {
+    calculateBtn.addEventListener("click", calculateEstimate);
+}
 
 // === EMAILJS FORM SUBMISSION ===
-document.getElementById("truck-form").addEventListener("submit", function(e) {
-  e.preventDefault();
+const truckForm = document.getElementById("truck-form");
 
-  const serviceType = document.getElementById("service-type").value;
-  const frequency = document.getElementById("frequency").value;
-  const vehicleCheckboxes = document.querySelectorAll('input[name="vehicle"]:checked');
+if (truckForm) {
+  truckForm.addEventListener("submit", function(e) {
+    e.preventDefault();
 
-  let totalPrice = 0;
-  let vehicles = [];
-  let quantities = [];
-  let summary = [];
+    const serviceType = document.getElementById("service-type").value;
+    const frequency = document.getElementById("frequency").value;
+    const vehicleCheckboxes = document.querySelectorAll('input[name="vehicle"]:checked');
 
-  vehicleCheckboxes.forEach(vehicle => {
-    const type = vehicle.value;
-    const qtyInput = document.querySelector(`select[name="${type}-qty"]`);
-    const qty = parseInt(qtyInput.value) || 0;
+    let totalPrice = 0;
+    let vehicles = [];
+    let quantities = [];
+    let summary = [];
 
-    if (qty > 0) {
-      const qtyGroup = getQuantityGroup(qty);
-      const pricePerVehicle = priceTable[serviceType][type][qtyGroup];
-      const subtotal = pricePerVehicle * qty;
-      totalPrice += subtotal;
+    vehicleCheckboxes.forEach(vehicle => {
+      const type = vehicle.value;
+      const qtyInput = document.querySelector(`select[name="${type}-qty"]`);
+      const qty = parseInt(qtyInput.value) || 0;
 
-      vehicles.push(type);
-      quantities.push(qty);
-      summary.push(`${type} x${qty} (${pricePerVehicle}$/ea)`);
-    }
-  });
+      if (qty > 0) {
+        const qtyGroup = getQuantityGroup(qty);
+        const pricePerVehicle = priceTable[serviceType][type][qtyGroup];
+        const subtotal = pricePerVehicle * qty;
+        totalPrice += subtotal;
+
+        vehicles.push(type);
+        quantities.push(qty);
+        summary.push(`${type} x${qty} (${pricePerVehicle}$/ea)`);
+      }
+    });
 
   totalPrice *= frequencyMultiplier[frequency];
   totalPrice = Math.round(totalPrice * 100) / 100;
@@ -368,7 +344,6 @@ document.getElementById("truck-form").addEventListener("submit", function(e) {
     vehicleSummary += `${quantities[i]} ${fullName}`;
     if (i < vehicles.length - 1) vehicleSummary += ", ";
   }
-
 
   // === CONTACT INFO ===
   const name = document.getElementById("name").value.trim();
@@ -390,7 +365,7 @@ document.getElementById("truck-form").addEventListener("submit", function(e) {
   }).then(
     function(response) {
       alert("Your request has been sent successfully! We'll contact you shortly.");
-      document.getElementById("truck-form").reset();
+      truckForm.reset();
       document.getElementById("price-result").innerText = '';
     },
     function(error) {
@@ -399,3 +374,4 @@ document.getElementById("truck-form").addEventListener("submit", function(e) {
     }
   );
 });
+}

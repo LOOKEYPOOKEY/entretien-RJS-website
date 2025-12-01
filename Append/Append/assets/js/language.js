@@ -1,82 +1,123 @@
-    // language.js - improved: toggles the info boxes and applies translations
+// language.js - improved: cache original English text, apply French translations, restore English
+
+(function () {
+    // Cache of original (English) HTML for keys so we can restore when switching back
+    const originalContent = {};
 
     // Show/hide the bilingual info boxes (keeps collapsible state closed when switching)
     function showInfoForLang(lang) {
-    const enBox = document.getElementById("info-en");
-    const frBox = document.getElementById("info-fr");
-    const enContent = document.getElementById("infoContentEn");
-    const frContent = document.getElementById("infoContentFr");
+        const enBox = document.getElementById('info-en');
+        const frBox = document.getElementById('info-fr');
+        const enContent = document.getElementById('infoContentEn');
+        const frContent = document.getElementById('infoContentFr');
 
-    if (enBox && frBox && enContent && frContent) {
-        if (lang === 'fr') {
-        enBox.style.display = "none";
-        frBox.style.display = "block";
-        } else {
-        enBox.style.display = "block";
-        frBox.style.display = "none";
+        if (enBox && frBox && enContent && frContent) {
+            if (lang === 'fr') {
+                enBox.style.display = 'none';
+                frBox.style.display = 'block';
+            } else {
+                enBox.style.display = 'block';
+                frBox.style.display = 'none';
+            }
+            // Close both collapsible contents when switching so toggle works predictably
+            enContent.classList.remove('open');
+            frContent.classList.remove('open');
         }
-        // Close both collapsible contents when switching so toggle works predictably
-        enContent.classList.remove("open");
-        frContent.classList.remove("open");
-    } else {
-        // If boxes don't exist, no-op (prevents errors)
-        // console.warn("Info boxes not found; skipping showInfoForLang.");
-    }
     }
 
-    // Main loader for French translations
-    function loadLanguage(lang) {
-    if (lang === 'fr') {
-        localStorage.setItem('lang', 'fr');
-
-        fetch('./lang/fr.json')
-        .then(response => response.json())
-        .then(translations => {
-            // Translate by ID (for unique elements)
-            for (const key in translations) {
-            const element = document.getElementById(key);
-            if (element) {
-                // Use innerHTML for elements that may contain markup; otherwise innerText is OK.
-                // If your translations are plain text, innerText is safe. To support <strong> tags, use innerHTML.
-                element.innerHTML = translations[key];
-            }
-            }
-
-            // Translate all elements with data-key
-            document.querySelectorAll('.translate').forEach(el => {
-            const key = el.getAttribute('data-key');
-            if (translations[key]) {
+    // Helper: apply translations object to the page (keys -> html)
+    function applyTranslations(translations) {
+        // Apply translations for elements with matching IDs
+        for (const key in translations) {
+            if (!Object.prototype.hasOwnProperty.call(translations, key)) continue;
+            const el = document.getElementById(key);
+            if (el) {
                 el.innerHTML = translations[key];
             }
-            });
+        }
 
-            // Show french info box and hide english one
-            showInfoForLang('fr');
-        })
-        .catch(err => {
-            console.error("Failed to load French translations:", err);
-            // still show French box if language set to fr (best effort)
-            showInfoForLang('fr');
+        // Apply translations for elements marked with .translate and a data-key
+        document.querySelectorAll('.translate').forEach((el) => {
+            const key = el.getAttribute('data-key');
+            if (key && translations[key]) {
+                el.innerHTML = translations[key];
+            }
+        });
+    }
+
+    // Helper: cache original English content for keys present in translations or data-key elements
+    function cacheOriginalForKeys(keys) {
+        // Cache elements by id
+        keys.forEach((key) => {
+            const el = document.getElementById(key);
+            if (el && !(key in originalContent)) originalContent[key] = el.innerHTML;
         });
 
-    } else if (lang === 'en') {
-        // Save preference
-        localStorage.setItem('lang', 'en');
-
-        // Restore original (English) content. We assume the original English text is in the HTML source.
-        // If you have an 'en.json' and want to reapply via JS, you can fetch and apply it here similarly.
-        // Show english info box and hide french one
-        showInfoForLang('en');
+        // Cache elements with data-key attributes that match any key
+        document.querySelectorAll('.translate').forEach((el) => {
+            const key = el.getAttribute('data-key');
+            if (key && keys.includes(key) && !(key in originalContent)) originalContent[key] = el.innerHTML;
+        });
     }
+
+    // Restore original English content from cache
+    function restoreOriginal() {
+        for (const key in originalContent) {
+            if (!Object.prototype.hasOwnProperty.call(originalContent, key)) continue;
+            const elById = document.getElementById(key);
+            if (elById) {
+                elById.innerHTML = originalContent[key];
+                continue;
+            }
+            // Fallback: check translate elements for matching data-key
+            document.querySelectorAll('.translate').forEach((el) => {
+                if (el.getAttribute('data-key') === key) el.innerHTML = originalContent[key];
+            });
+        }
+    }
+
+    // Main loader
+    function loadLanguage(lang) {
+        if (lang === 'fr') {
+            localStorage.setItem('lang', 'fr');
+
+            fetch('./lang/fr.json')
+                .then((response) => response.json())
+                .then((translations) => {
+                    const keys = Object.keys(translations);
+                    // Cache original English text for keys we'll replace
+                    cacheOriginalForKeys(keys);
+
+                    applyTranslations(translations);
+
+                    showInfoForLang('fr');
+                })
+                .catch((err) => {
+                    console.error('Failed to load French translations:', err);
+                    showInfoForLang('fr');
+                });
+
+            return;
+        }
+
+        if (lang === 'en') {
+            localStorage.setItem('lang', 'en');
+            // Restore any cached English content
+            restoreOriginal();
+            showInfoForLang('en');
+        }
     }
 
     // On page load: restore saved language (default to 'en' if not set)
-    window.addEventListener('DOMContentLoaded', function() {
-    const saved = localStorage.getItem('lang') || 'fr'; // your previous behavior used 'fr' default
-    if (saved === 'fr') {
-        loadLanguage('fr');
-    } else {
-        // ensure english UI is shown
-        loadLanguage('en');
-    }
+    window.addEventListener('DOMContentLoaded', function () {
+        const saved = localStorage.getItem('lang') || 'en';
+        if (saved === 'fr') {
+            loadLanguage('fr');
+        } else {
+            loadLanguage('en');
+        }
     });
+
+    // Expose loader to global scope (buttons call loadLanguage)
+    window.loadLanguage = loadLanguage;
+})();

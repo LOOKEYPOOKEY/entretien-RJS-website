@@ -3,7 +3,7 @@
     "location": "Montreal | Laval | Rive-Nord",
     "home": "Accueil",
     "our_work": "Nos Projets",
-    "services": "Nos Services ˅",
+    "services": "Nos Services ▾",
     "all_services": "Toutes les Services",
     "general_washing": "Nettoyage à Pression Général",
     "driveway": "Nettoyage d’Entrée de Cour",
@@ -56,6 +56,13 @@
     "opening_hours": "Heures d'Ouverture",
     "days": "Lundi - Vendredi",
     "contact": "Contactez Nous",
+    "contact_address": "Adresse",
+    "contact_city": "Laval, Quebec",
+    "contact_call": "Appelez-Nous",
+    "contact_email": "Envoyez-Nous un Email",
+    "contact_hours": "Heures d'Ouverture",
+    "contact_days_hours": "Lundi - Vendredi",
+    "contact_time": "9:00 AM - 20:00",
     
     
     "our_workk": "Nos Projets",
@@ -99,5 +106,11 @@
     "name_label": "Nom Complet:",
     "phone_label": "Numéro de Téléphone:",
     "message_label": "Message Supplémentaire:",
-    "submit_btn": "Soumettre la Demande"
+    "submit_btn": "Soumettre la Demande",
+
+
+    "select_estimation": "Sélectionnez une Catégorie d'Estimation Gratuite",
+    "v_cleaning": "Nettoyage de Véhicules",
+    "p_washing": "Nettoyage à Pression",
+    "l_scaping": "Aménagement Paysager"
 }
