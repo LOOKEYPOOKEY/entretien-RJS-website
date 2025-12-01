@@ -143,9 +143,7 @@
     }
   });
 
-  /**
-   * Navmenu Scrollspy
-   */
+  /* Navmenu Scrollspy */
   let navmenulinks = document.querySelectorAll('.navmenu a');
 
   function navmenuScrollspy() {
@@ -167,9 +165,66 @@
 
 })();
 
+
 // === VEHICLE CLEANING ESTIMATION SCRIPT ===
 
-// --- PRICE TABLE (from Elif’s new list) ---
+// === COLLAPSIBLE INFO BOX ===
+
+// Opens/closes the info content
+function toggleInfoBox(lang) {
+  if (lang === 'en') {
+    document.getElementById('infoContentEn').classList.toggle('open');
+  } else {
+    document.getElementById('infoContentFr').classList.toggle('open');
+  }
+}
+
+// Shows the correct info box based on selected language
+function showInfoForLang(lang) {
+  const enBox = document.getElementById("info-en");
+  const frBox = document.getElementById("info-fr");
+  const enContent = document.getElementById("infoContentEn");
+  const frContent = document.getElementById("infoContentFr");
+
+  if (lang === "fr") {
+    enBox.style.display = "none";
+    frBox.style.display = "block";
+
+    // Always close both boxes when switching languages
+    enContent.classList.remove("open");
+    frContent.classList.remove("open");
+  } else {
+    enBox.style.display = "block";
+    frBox.style.display = "none";
+
+    enContent.classList.remove("open");
+    frContent.classList.remove("open");
+  }
+}
+
+// === MAIN LANGUAGE SWITCH SYSTEM ===
+
+function setLanguage(lang) {
+  // Store selected language (optional)
+  localStorage.setItem("site-lang", lang);
+
+  // Update HTML lang attribute (good for SEO)
+  document.documentElement.setAttribute("lang", lang);
+
+  // IMPORTANT: This is the line that makes the collapsible switch 🚨
+  showInfoForLang(lang);
+
+}
+
+// === AUTO-DETECT LANGUAGE ON PAGE LOAD ===
+
+document.addEventListener("DOMContentLoaded", () => {
+  const savedLang = localStorage.getItem("site-lang") || "en";
+  setLanguage(savedLang);
+});
+
+
+// --- PRICE TABLE ---
 const priceTable = {
   bronze: {
     small: { "1-2": 75, "3-5": 65, "6-10": 60, "11-20": 55 },
@@ -187,6 +242,15 @@ const priceTable = {
     "xl-tipper": { "1-2": 140, "3-5": 125, "6-10": 120, "11-20": 115 },
     box: { "1-2": 130, "3-5": 115, "6-10": 110, "11-20": 105 }
   }
+};
+
+const vehicleNames = {
+  small: "Small (Sedan, Hatchback)",
+  medium: "Medium (SUV, Mini-Van)",
+  large: "Large (Pickup Truck)",
+  "xl-notipper": "Extra Large (Semi without Tipper)",
+  "xl-tipper": "Extra Large (Semi with Tipper)",
+  box: "Box Truck (≤26 feet)"
 };
 
 // --- FREQUENCY DISCOUNT MULTIPLIERS ---
@@ -295,6 +359,16 @@ document.getElementById("truck-form").addEventListener("submit", function(e) {
 
   totalPrice *= frequencyMultiplier[frequency];
   totalPrice = Math.round(totalPrice * 100) / 100;
+  
+  // === BUILD VEHICLE SUMMARY FOR EMAIL ===
+  let vehicleSummary = "";
+
+  for (let i = 0; i < vehicles.length; i++) {
+    const fullName = vehicleNames[vehicles[i]] || vehicles[i];
+    vehicleSummary += `${quantities[i]} ${fullName}`;
+    if (i < vehicles.length - 1) vehicleSummary += ", ";
+  }
+
 
   // === CONTACT INFO ===
   const name = document.getElementById("name").value.trim();
@@ -308,10 +382,9 @@ document.getElementById("truck-form").addEventListener("submit", function(e) {
     email: email,
     phone: phone,
     message: message,
-    vehicles: vehicles.join(", "),
+    vehicleSummary: vehicleSummary,
     service: serviceType.toUpperCase(),
     frequency: frequency,
-    quantities: quantities.join(", "),
     summary: summary.join(", "),
     total_price: `$${totalPrice.toFixed(2)}`
   }).then(
