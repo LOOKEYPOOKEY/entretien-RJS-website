@@ -186,7 +186,7 @@
 
         <select name="small-qty" class="qty-input">
             <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
                 document.write(`<option value="${i}">${i}</option>`);
             }
             </script>
@@ -199,7 +199,7 @@
         <label for="medium" id="medium-label">Medium (SUV, Mini-Van)</label>
         <select name="medium-qty" class="qty-input">
         <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
             document.write(`<option value="${i}">${i}</option>`);
             }
         </script>
@@ -211,7 +211,7 @@
         <label for="large" id="large-label">Large (Pickup Truck)</label>
         <select name="large-qty" class="qty-input">
         <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
             document.write(`<option value="${i}">${i}</option>`);
             }
         </script>
@@ -223,7 +223,7 @@
         <label for="xl-no-tipper" id="xl-no-tipper-label">Extra Large (Semi without Tipper)</label>
         <select name="xl-notipper-qty" class="qty-input">
         <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
             document.write(`<option value="${i}">${i}</option>`);
             }
         </script>
@@ -235,7 +235,7 @@
         <label for="xl-tipper" id="xl-tipper-label">Extra Large (Semi with Tipper)</label>
         <select name="xl-tipper-qty" class="qty-input">
         <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
             document.write(`<option value="${i}">${i}</option>`);
             }
         </script>
@@ -247,7 +247,7 @@
         <label for="box" id="box-label">Box Truck (≤26 feet)</label>
         <select name="box-qty" class="qty-input">
         <script>
-            for (let i = 0; i <= 60; i++) {
+            for (let i = 0; i <= 20; i++) {
             document.write(`<option value="${i}">${i}</option>`);
             }
         </script>
@@ -395,6 +395,28 @@
     emailjs.init("a7P-rss0P7XRmjebI");
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mappings = {
+        'small-qty': 'small',
+        'medium-qty': 'medium',
+        'large-qty': 'large',
+        'xl-notipper-qty': 'xl-no-tipper',
+        'xl-tipper-qty': 'xl-tipper',
+        'box-qty': 'box'
+    };
+
+    Object.keys(mappings).forEach(qtyName => {
+        const select = document.querySelector(`select[name="${qtyName}"]`);
+        const checkbox = document.getElementById(mappings[qtyName]);
+        if (select && checkbox) {
+            select.addEventListener('change', function() {
+                checkbox.checked = parseInt(this.value) > 0;
+            });
+        }
+    });
+});
+</script>
 
 </body>
 
