@@ -266,6 +266,11 @@ h2{
   padding: 20px;
 }
 
+/* Add scroll margin to service sections for better visibility when linked from nav */
+.service {
+  scroll-margin-top: 150px;
+}
+
 .service {
   display: flex;
   flex-direction: row; /* Default: content on left, image on right */
@@ -281,6 +286,16 @@ h2{
 .service-content {
   flex: 1;
   padding: 10px;
+}
+
+.services .service h2 {
+  margin-bottom: 20px;
+  margin-top: 8px;
+}
+
+.service .service p {
+  margin-top: 0;
+  margin-bottom: 22px;
 }
 
 .service-image {
@@ -1490,7 +1505,7 @@ section,
 }
 
 .about .content h2 + p {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .about .content p:last-child {
